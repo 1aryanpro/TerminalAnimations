@@ -19,14 +19,28 @@ private:
     std::chrono::time_point<clock_> beg_;
 };
 
+int roundDown (int number, int multiple) {
+	int result = ((number + multiple/2) / multiple) * multiple;
+	return result;
+}
 
-using namespace std;
 int main() {
 
-	int width = 54, height = 54;
+	int width, height;
+	int sw, sh;
 	draw::init();
 
-	WINDOW *win = draw::createWin(height, width);
+	draw::getScreenSize(&sh, &sw);
+
+  	if (sw >= sh * 18/8) {
+  		height = roundDown(sh * 3/4, 8) * 18/8;
+  		width = height;
+  	} else {
+  		width = sw - sw%8;
+  		height = width;
+  	}
+
+	WINDOW *win = draw::createWin(width, height);
 	
 	const float fps = 60.0f;
 	const float dt = 1.0f/fps;
@@ -34,21 +48,24 @@ int main() {
 	Timer tmr;
 	float frameStart = tmr.elapsed();
 
-	float x = width/2, y = height/2, dx = 1, dy = 0;
+	float x = 15, y = 15, dx = 5, dy = 0;
 
 	while(true) {
 		float currentTime = tmr.elapsed();
 		accumulator += currentTime - frameStart;
-
 		frameStart=currentTime;
-		printf("%d, %d", width, height);
 
-		//if(accumulator >= 1.0f / 30.0f)	accumulator = 1.0f / 30.0f;
+		if(accumulator >= 1.0f / 30.0f)	accumulator = 1.0f / 30.0f;
+
+		mvprintw(0, 0, "Window: %d x %d", width, height);
+		mvprintw(1, 0, "Screen: %d x %d", sw, sh);
+		mvprintw(0, 30, "pos: %f, %f", x, y);
+		mvprintw(1, 30, "vel: %f, %f", dx, dy);
 
 		while(accumulator > dt)
 		{
-			x += dx/10;
-			y += dy/10;
+			x += dx*dt;
+			y += dy*dt;
 			dy += 0.05;
 			
 			if(x > width){

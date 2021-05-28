@@ -14,6 +14,11 @@ namespace draw {
 		getmaxyx(stdscr, height, width);
 	}
 
+	void getScreenSize(int *sh, int *sw) {
+		*sh = height;
+		*sw = width;
+	}
+
 	WINDOW *createWin(int h, int w) {
 		int wh = (h*8/18);
 		int ww = w;
@@ -23,7 +28,7 @@ namespace draw {
 	}
 
 	void puts(float y, float x, char c) {
-		mvwaddch(win, int(y*8/18)+1, x+1, c);
+		mvwaddch(win, y*8/18+1, x+1, c);
 	}
 
 	void draw() {
