@@ -1,8 +1,26 @@
 #include <iostream>
-#include <cstdio>
+#include <stdio.h>
+#include <stdlib.h>
 #include <curses.h>
 
 #include "draw.h"
+
+typedef struct {
+	int x;
+	int y;
+} Vector;
+
+namespace vector
+{
+	Vector *make(int x, int y)
+	{
+		Vector* out = (Vector*)malloc(sizeof(Vector));
+		out->x = x;
+		out->y = y;
+
+		return out;
+	}
+}
 
 int main()
 {
@@ -17,16 +35,43 @@ int main()
 
 	WINDOW *win = draw::createScaledWin(yMax, xMax, &wh, &ww);
 
-	float x = xMax / 2, y = yMax / 2, dx = 15, dy = 0;
+	float x = xMax / 2, y = yMax / 4, dx = 15, dy = 0;
+
+	size_t trail_len = 50;
+	Vector *trail[trail_len];
+
+	for (size_t i = 0; i < trail_len; i++)
+	{
+		trail[i] = vector::make(i, i);
+	}
+
 
 	while (true)
 	{
 		int loopCount = draw::loopStart();
 
-		mvprintw(0, 0, "Window: %d x %d", ww, wh);
-		mvprintw(1, 0, "Screen: %d x %d", sw, sh);
+		int sx, sy;
+		draw::getScreenCoords(y, x, &sy, &sx);
+
+		mvprintw(0, 0, "Window:     %d x %d", ww, wh);
+		mvprintw(1, 0, "Screen:     %d x %d", sw, sh);
+		mvprintw(2, 0, "Screen Pos: %d x %d", sx, sy);
 		mvprintw(0, 30, "pos: %f, %f", x, y);
 		mvprintw(1, 30, "vel: %f, %f", dx, dy);
+
+
+		for (size_t i = trail_len - 1; i > 0; i--)
+		{
+			Vector *cur = trail[i];
+			if(i > trail_len / 2) { draw::sputs(cur->y, cur->x, ':'); }
+			else { draw::sputs(cur->y, cur->x, '.'); }
+			
+			trail[i] = trail[i-1];
+		}
+		
+		draw::getScreenCoords(y, x, &(trail[0]->y), &(trail[0]->x));
+
+		draw::sputs(trail[0]->y, trail[0]->x + 1, 'x');
 
 		for (int loopStep = 0; loopStep < loopCount; loopStep++)
 		{
@@ -55,7 +100,11 @@ int main()
 				y = 0;
 				dy *= -1;
 			}
+
+
+
 		}
+
 
 		draw::puts(y, x, 'o');
 		draw::loopEnd();

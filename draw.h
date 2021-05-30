@@ -12,11 +12,13 @@ namespace draw
 	WINDOW *createWin(int h, int w);
 	WINDOW *createScaledWin(float h, float w, int *_wh, int *_ww);
 	void puts(float y, float x, char c);
+	void sputs(int y, int x, char c);
 	int loopStart();
 	void loopEnd();
 	void close();
 
 	void getScreenSize(int *_sh, int *_sw);
+	void getScreenCoords(float y, float x, int *sy, int *sx);
 }
 
 #endif

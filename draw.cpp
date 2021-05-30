@@ -86,8 +86,21 @@ namespace draw
 		mvwaddch(win, sy * 8 / 18 + 1, sx + 1, c);
 	}
 
+	void sputs(int y, int x, char c)
+	{
+		mvwaddch(win, y + 1, x + 1, c);
+	}
+
+	void getScreenCoords(float y, float x, int *sy, int *sx)
+	{
+		*sy = y / yMax * windowHeight * 8/18;
+		*sx = x / xMax * windowWidth;
+	}
+
 	int loopStart()
 	{
+		werase(win);
+
 		float currentTime = tmr.elapsed();
 		accumulator += currentTime - frameStart;
 		frameStart = currentTime;
@@ -111,7 +124,6 @@ namespace draw
 		box(win, 0, 0);
 		wrefresh(win);
 		refresh();
-		werase(win);
 	}
 
 	void close()
