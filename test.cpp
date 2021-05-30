@@ -35,14 +35,14 @@ int main()
 
 	WINDOW *win = draw::createScaledWin(yMax, xMax, &wh, &ww);
 
-	float x = xMax / 2, y = yMax / 4, dx = 15, dy = 0;
+	float x = xMax / 2, y = yMax / 4, dx = 10, dy = 0;
 
-	size_t trail_len = 50;
+	size_t trail_len = 100;
 	Vector *trail[trail_len];
 
 	for (size_t i = 0; i < trail_len; i++)
 	{
-		trail[i] = vector::make(i, i);
+		trail[i] = vector::make(0, 0);
 	}
 
 
@@ -60,24 +60,29 @@ int main()
 		mvprintw(1, 30, "vel: %f, %f", dx, dy);
 
 
-		for (size_t i = trail_len - 1; i > 0; i--)
+		if (loopCount > 0) 
+		{
+			for (size_t i = 0; i < trail_len - 1; i++)
+			{
+				trail[i]->x = trail[i+1]->x;	
+				trail[i]->y = trail[i+1]->y;	
+			}
+			trail[trail_len-1] = vector::make(sx, sy);
+		}
+
+		for (size_t i = 0; i < trail_len - 1; i++)
 		{
 			Vector *cur = trail[i];
 			if(i > trail_len / 2) { draw::sputs(cur->y, cur->x, ':'); }
 			else { draw::sputs(cur->y, cur->x, '.'); }
-			
-			trail[i] = trail[i-1];
 		}
-		
-		draw::getScreenCoords(y, x, &(trail[0]->y), &(trail[0]->x));
 
-		draw::sputs(trail[0]->y, trail[0]->x + 1, 'x');
 
 		for (int loopStep = 0; loopStep < loopCount; loopStep++)
 		{
 			x += dx * dt;
 			y += dy * dt;
-			dy += 0.1;
+			dy += 0.2;
 
 			if (x > xMax)
 			{
@@ -93,7 +98,7 @@ int main()
 			if (y > yMax)
 			{
 				y = yMax;
-				dy *= -1;
+				dy *= -0.95;
 			}
 			else if (y < 0)
 			{
