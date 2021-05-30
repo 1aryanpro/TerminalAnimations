@@ -3,12 +3,6 @@
 #include <curses.h>
 #include "timer.h"
 
-Timer::Timer() : beg_(clock_::now()) {}
-void Timer::reset() { beg_ = clock_::now(); }
-float Timer::elapsed()
-{
-	return std::chrono::duration_cast<second_>(clock_::now() - beg_).count();
-}
 
 int roundDown(int number, int multiple)
 {

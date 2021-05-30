@@ -4,23 +4,8 @@
 #include <curses.h>
 
 #include "draw.h"
+#include "vector.h"
 
-typedef struct {
-	int x;
-	int y;
-} Vector;
-
-namespace vector
-{
-	Vector *make(int x, int y)
-	{
-		Vector* out = (Vector*)malloc(sizeof(Vector));
-		out->x = x;
-		out->y = y;
-
-		return out;
-	}
-}
 
 int main()
 {
@@ -37,12 +22,12 @@ int main()
 
 	float x = xMax / 2, y = yMax / 4, dx = 10, dy = 0;
 
-	size_t trail_len = 100;
+	size_t trail_len = 10;
 	Vector *trail[trail_len];
 
 	for (size_t i = 0; i < trail_len; i++)
 	{
-		trail[i] = vector::make(0, 0);
+		trail[i] = vector::make(-1, -1);
 	}
 
 
@@ -60,7 +45,7 @@ int main()
 		mvprintw(1, 30, "vel: %f, %f", dx, dy);
 
 
-		if (loopCount > 0) 
+		if (loopCount > 0 && !vector::cmp(trail[trail_len-1], vector::make(sx, sy))) 
 		{
 			for (size_t i = 0; i < trail_len - 1; i++)
 			{
