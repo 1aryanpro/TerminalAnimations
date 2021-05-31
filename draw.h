@@ -13,6 +13,7 @@ namespace draw
 	WINDOW *createScaledWin(float h, float w, int *_wh, int *_ww);
 	void puts(float y, float x, char c);
 	void sputs(int y, int x, char c);
+	void line(float _y1, float _x1, float _y2, float _x2, char c);
 	int loopStart();
 	void loopEnd();
 	void close();
