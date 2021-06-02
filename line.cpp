@@ -7,31 +7,35 @@ int main()
 {
 	int xMax = 100, yMax = 100;
 	int ww, wh;
-	float fps = 60, dt = 1 / fps;
+	float fps = 300, dt = 1 / fps;
 	draw::init(fps);
 
 	WINDOW *win = draw::createScaledWin(yMax, xMax, &wh, &ww);
 
-	float theta = 0;
-	float period = 2;
-	float x, y;
+	float ap = PI/4;
+	float av = 0;
+
 	float px = xMax / 2, py = yMax / 2;
 	
-	int radius = 25;
+	int radius = 45;
 
 	while (true)
 	{
 		int loopCount = draw::loopStart();
 
+		float x, y;
 		for (int loopStep = 0; loopStep < loopCount; loopStep++)
 		{
-			theta += 2*PI/period * dt;
-			x = px + cos(theta) * radius;
-			y = py + sin(theta) * radius;
+			float aa = sin(PI/2 - ap) / radius * dt;
+			av += aa;
+			ap += av;
 		}
 
+		x = px + cos(ap) * radius;
+		y = py + sin(ap) * radius;
+
 		draw::line(py, px, y, x, '#');
-		draw::puts(py, px, 'o');
+		draw::puts(py - 1, px, 'o');
 		draw::puts(y, x, '@');
 		draw::loopEnd();
 	}

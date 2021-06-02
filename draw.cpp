@@ -111,9 +111,6 @@ namespace draw
 		int yDif = y2 - y1;
 		int xDif = x2 - x1;
 		
-		mvprintw(0, 0, "start: %d, %d", x1, y1);
-		mvprintw(1, 0, "end:   %d, %d", x2, y2);
-
 		if (abs(xDif) >= abs(yDif))
 		{
 			if(x1 > x2)
@@ -123,7 +120,6 @@ namespace draw
 			}
 
 			float slope = float(yDif)/float(xDif);
-			mvprintw(2, 0, "slope: %f", slope);
 
 			for(int x = x1; x < x2; x++) {
 				sputs(y1 + slope * (x - x1), x, c);
@@ -138,7 +134,6 @@ namespace draw
 			}
 
 			float slope = float(xDif)/float(yDif);
-			mvprintw(2, 0, "slope: %f", slope);
 
 			for(int y = y1; y < y2; y++) {
 				sputs(y, x1 + slope * (y - y1), c);
